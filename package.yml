@@ -1,0 +1,23 @@
+package: guinavigation
+version: '0.5.2 alpha - 180228'
+author: 'unknown'
+supportpage: www.redaxo.org/de/forum/
+
+
+page:
+    title: translate:guinav_name
+    perm: admin[]
+    pjax: true
+    icon: rex-icon fa-link
+    subpages:
+        simple: { title: translate:guinav_simple }
+        static: { title: translate:guinav_static }
+        context: { title: translate:guinav_context }
+        langswitch: { title: translate:guinav_langswitch }
+        breadcrumb: { title: translate:guinav_breadcrumb }
+
+requires:
+    php: 
+        php: '>= 5.5'
+    redaxo: ^5.1.0
+
