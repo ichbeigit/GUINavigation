@@ -15,6 +15,7 @@ page:
         context: { title: translate:guinav_context }
         langswitch: { title: translate:guinav_langswitch }
         breadcrumb: { title: translate:guinav_breadcrumb }
+        info: { title: translate:guinav_info }
 
 requires:
     php: 

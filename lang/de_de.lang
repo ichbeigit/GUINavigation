@@ -7,6 +7,7 @@ guinav_no_nav_found = Keine Navigation gefunden
 # felder
 guinav_categories = Kategorien
 guinav_articles = Artikel
+guinav_info = Info
 
 # ausgabe übersicht
 guinav_field_name_label = Name
