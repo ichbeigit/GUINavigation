@@ -32,6 +32,8 @@ guinav_input_los_label = Auf sich selbst verlinken
 guinav_input_cc_text = Eltern Elemente des aktiven Elements mit einer Klasse markieren 
 guinav_input_cc_label = Klasse Eltern
 guinav_input_alc_label = Klasse für aktive Links
+guinav_input_ii_label = ID Links
+guinav_input_ii_text = individuelle ID für alle Links einfügen id='id-article_id'
 guinav_input_sep_label = Trennzeichen
 guinav_input_exclude_label = Artikel auschließen
 guinav_input_exclude_text = Wird eine Kategorie ausgeschlossen, werden mögliche Unterkategorien ebenfalls nicht angezeigt.

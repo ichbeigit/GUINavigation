@@ -51,6 +51,11 @@ $field = $form->addTextField('active_link_class', $dhlc);
 $field->setLabel(rex_i18n::msg('guinav_bc_input_alc_label'));
 $field->setAttribute("maxlength", "63");
 
+// individual id
+$field = $form->addCheckboxField('individual_id');
+$field->setLabel(rex_i18n::msg('guinav_input_ii_label'));
+$field->addOption(rex_i18n::msg('guinav_input_ii_text'), 1);
+
 // seperator
 $field = $form->addTextField('separator_string');
 $field->setLabel(rex_i18n::msg('guinav_input_sep_label'));

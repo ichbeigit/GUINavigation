@@ -77,7 +77,6 @@ $select->addOptions( array("" => rex_i18n::msg('guinav_input_home_nope'),
 $field = $form->addCheckboxField('link_on_self');
 $field->setLabel(rex_i18n::msg('guinav_input_los_label'));
 $field->addOption('', 1);
-if($add) $field->setAttribute($c, $c);
 
 // mark parent - current class
 $field = $form->addRawField("<div class='rex-form-group form-group'>" . rex_i18n::msg('guinav_input_cc_text') . "</div>\n");
@@ -87,6 +86,11 @@ $field->setLabel(rex_i18n::msg('guinav_input_cc_label'));
 // active link class
 $field = $form->addTextField('active_link_class', $dhlc);
 $field->setLabel(rex_i18n::msg('guinav_input_alc_label'));
+
+// individual id
+$field = $form->addCheckboxField('individual_id');
+$field->setLabel(rex_i18n::msg('guinav_input_ii_label'));
+$field->addOption(rex_i18n::msg('guinav_input_ii_text'), 1);
 
 // exclude articles
 $field = $form->addLinkListField('exclude');

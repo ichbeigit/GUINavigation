@@ -28,13 +28,12 @@ class GUINavigation {
 	private $base_id;
 	private $lsp; // list starting point
 	private $depth;
-	//private $lla; // link last level articles
 	private $los; // link on self
-	//private $esa; // exclude start article
 	private $cc; // current class
 	private $alc; // active link class
+	private $ii; // indivdual id
 	private $home;
-	private $exlude;
+	private $exclude;
 	private $separator; 
 
 	// langswitch
@@ -42,8 +41,6 @@ class GUINavigation {
 	private $ls_show_active; //  show active
 	private $ls_show_offline; // show offline
 	private $ls_offline_class; // offline class
-
-	// breadcrumb
 
 	// intern
 	private $workDepth;
@@ -72,13 +69,11 @@ class GUINavigation {
 			$this->base_id = intval($this->sql->getValue('base_id'));
 			$this->lsp = $this->sql->getValue('list_starting_point');
 			$this->depth = intval($this->sql->getValue('depth'));
-
-			//$this->lla = $this->sql->getValue('last_level_articles');
 			$this->los = $this->sql->getValue('link_on_self');
-			//$this->esa = $this->sql->getValue('exclude_start_article');
 			$cc = $this->sql->getValue('current_class');
 			$this->cc = $cc === NULL ? false : $cc;
 			$this->alc = $this->sql->getValue('active_link_class');
+			$this->ii = $this->sql->getValue('individual_id');
 			$h = $this->sql->getValue('home');
 			$this->home = strlen($h) ?  $h : false; 
 			$ex = $this->sql->getValue('exclude');
@@ -98,8 +93,6 @@ class GUINavigation {
 			$this->ls_show_offline = strlen($this->sql->getValue('langswitch_show_offline')) ? true: false;
 			$this->ls_offline_class = $this->sql->getValue('langswitch_offline_class');
 
-			$this->actel = false;  // to do: id für jedes Element der Navi einfügen.
-
 		} else {
 
 			$this->notFound();
@@ -109,7 +102,6 @@ class GUINavigation {
 
 		// check root
 		if($this->base_id === 0) $this->root = true;
-		//var_dump($this->base_id);
 
 		// environment
 		$this->clang_id = rex_clang::getCurrentId();
@@ -129,20 +121,15 @@ class GUINavigation {
 			array_push($this->path, $this->cart_id);
 		}
 
-		// } else {
-
-		// 	$this->last_cat_in_path = true;
-
-		// }
-
 		$this->workDepth = 1;
 
 		// ctxt
 		if($this->nav_type == "context"){
-			//var_dump($this->path);
-			//var_dump($this->base_id);
+
 			if($this->depth === 0) return false; // mis config error
+
 			$cp = count($this->path)-1;
+
 			switch(true){
 				case ($this->base_id < 0): 
 					// von aktuellem standpunkt nach oben
@@ -161,7 +148,8 @@ class GUINavigation {
                     $this->ctxtStart = $this->path[($this->last_cat_in_path !== false ? $pc : $pc - 1)]; 	
                     break;
 			}
-		} else if($this->nav_type == "static" and $this->depth === "0") return false; // keine Tiefe, nix ausgeben
+
+		} else if ($this->nav_type == "static" and $this->depth === "0") return false; // keine Tiefe, nix ausgeben
 
 		// navigation holen
 		$this->get();
@@ -258,12 +246,6 @@ class GUINavigation {
 		// home
 		if($this->home) $linkArr = $this->homeIn($linkArr);
 
-		
-
-		// echo "<pre>";
-		// print_r($linkArr);
-		// echo "</pre>";
-		
 		// nav ausgeben
 		if( $this->ulLinks($linkArr) ) return true;
 
@@ -279,28 +261,21 @@ class GUINavigation {
 
 		// ebene checken
 		$curr_depth =  count($this->path) - ($this->last_cat_in_path !== false ? 0 : 1);
+
 		if( $curr_depth <= $this->ctxtStartDepth) return false;
-		// var_dump($this->ctxtStart);
-		// var_dump($this->path);
+	
 		$FLObjs = $this->getChildren($this->ctxtStart);
 
-		//print_r($FLObjs);
-
 		if(!$FLObjs) return false;
-
-		// später wird startpunkt eingefügt, deshalb ist die workdepth hochzusetzen
-		//if($this->nuc) $this->workDepth++;
 
 		$linkArr = $this->getLinks($FLObjs);
 
 		if(!$this->nuc) $linkArr = $this->getArtArr($linkArr);
 
 		// startpunkt einfügen bei contextueller nav
-		//if($this->nuc){
-			$ctb = array( array($linkArr) );
-			$linkArr = $this->homeIn($linkArr, $this->ctxtStart);
-			//print_r($linkArr);
-		//}
+		$ctb = array( array($linkArr) );
+		$linkArr = $this->homeIn($linkArr, $this->ctxtStart);
+			
 		// home
 		if($this->home) $linkArr = $this->homeIn($linkArr);
 		
@@ -407,14 +382,17 @@ class GUINavigation {
 		$bid = $nxlid ? $nxlid : $this->base_id;
 
 		if($this->root and !$nxlid){
-			//$nos = $nuc ? rex_category::getRootCategories($this->io, $this->clang_id) : rex_article::getRootArticles($this->io, $this->clang_id);
+	
 			$nos = rex_category::getRootCategories($this->io, $this->clang_id);
+
 		} else {
+
 			$start_cat = rex_category::get($bid, $this->clang_id);
+
 			if( ! ($start_cat instanceOf rex_category) ) return false;
 
-			//$nos = $nuc ? $start_cat->getChildren($this->io) : $start_cat->getArticles($this->io);
 			$nos = $start_cat->getChildren($this->io);
+
 		}
 
 		if(count($nos) < 1) return false;
@@ -422,9 +400,9 @@ class GUINavigation {
 		$FLObjs = false;
 
 		foreach($nos as $v) {
-			//$vid = ;
-			//if($this->esa and !$nuc and ($vid == $bid)) continue; 
+			
 			$FLObjs[$v->getId()] = $v;
+
 		}
 
       	return $FLObjs;
@@ -452,7 +430,7 @@ class GUINavigation {
 
 		if($this->depth >=  3) $oacc[] = "level-" . $this->workDepth;
 		if($kid == $this->ssaid) $oacc[] = "site-start";
-		if($this->actel) $oacc[] = "id-$kid"; // to do
+		$iistr = $this->ii ? " id='id-$kid' " : ""; 
 
 		
 		// link first sub categorie
@@ -467,33 +445,19 @@ class GUINavigation {
 		$lstrc = is_array($oacc) ? " class='" . trim(implode(" ", $oacc)) . "'" : "";
 
 		if(!$this->los and $this->cart_id == $kid){
+
 			// nicht auf sich selbst verlinken
-			$ls = "<span$lstrc>" . $vo->getName() . "</span>";
+			$ls = "<span$lstrc$iistr>" . $vo->getName() . "</span>";
+
 		} else {
-			$ls =  '<a href="' . rex_getUrl($kid,$this->clang_id) . '"' . $lstrc . '>' . $vo->getName() . "</a>";
-			//'-' . $this->workDepth . ', ' . $kid . '</A>';
+
+			$ls =  '<a href="' . rex_getUrl($kid,$this->clang_id) . '"' . $lstrc . $iistr . '>' . $vo->getName() . "</a>";
+			
 		}
 
 		return $ls;
 
 	}
-
-		// 	echo "<pre>";
-		// var_dump($nxlcl);
-		// echo "</pre>";
-
-	/* 
-	last level articles 
-	expects two arrays
-	*/
-	// private function getLastLevelArticles($nxlc, $nxlcl){
-	// 	foreach($nxlc as $vlla){
-	// 		$lla = $this->getArtLinks($this->getChildren($vlla->getId(), true));
-	// 		if($lla) array_push($nxlcl, array($lla));
-	// 	}
-	// 	return $nxlcl;
-
-	// }
 
 	/* get Kategorie Links */
 
@@ -507,8 +471,6 @@ class GUINavigation {
 
 		foreach($FLObjs as $kid => $vo){
 
-			//echo $kid . ", " . $this->workDepth . ", " . $this->depth . "<br>";;
-
 			if( in_array($kid, $this->exclude) ) continue; // ausgeschlossene Artikel
 
 			// link_first
@@ -517,35 +479,26 @@ class GUINavigation {
 
 			// weitere ebenen 
 			if($this->workDepth < $this->depth or $this->depth == (int) -1 ){
+
 				$this->workDepth++;
 				$nxlc = $this->getChildren($kid);
-				//var_dump($nxlc);
+				
 				if($nxlc){
+
 					$nxlcl = $this->getLinks($nxlc); // recursiv 
 
-					// if($this->lla and $this->workDepth == $this->depth){
-					// 	// last level articles holen
-					// 	$nxlcl = $this->getLastLevelArticles($nxlc, $nxlcl);
-					// }	
 					// ohne key wird eine neues array angefügt
 					$ak = array_keys($linkArr);
 					$linkArr[ array_pop($ak) ][] = $nxlcl;
+
 				} 
 
 				$this->workDepth--;
 
 			} 
-			// else if($this->depth == 1 and $this->lla){
-			// 	// wenn die depth 1, dann lla hier holen
-			// 	$linkArr = $this->getLastLevelArticles(array($vo), $linkArr);
-			// 	//$linkArr[][] = $nxlcl;
-			// }
-
+			
 		}
-		// 	echo "<pre>";
-		// var_dump($linkArr);
-		// echo "</pre>";
-
+		
 		return $linkArr;
 
 	}
@@ -566,12 +519,13 @@ class GUINavigation {
 		foreach ($linkArr as $k => $v) {
 
 			if($k === 0) {
-				// $aoc = false;
-				// $addrootarts = true;
+			
 				continue;
+
 			} else {
+
 				$aoc = $v[0];
-				// $nla[$k][0] = array( $this->getLStr($k, rex_article::get($k)) );
+				
 			}
 
 			$nla[$k] = $this->getArtLinks($aoc);
@@ -579,12 +533,6 @@ class GUINavigation {
 			if(count($v) > 1) $nla[$k][1] = $this->getArtArr($v[1]);
 
 		}
-
-		// if($this->root) {
-		// 	$rootarts = $this->getArtLinks();
-		// 	$rootartskeys = array_keys($rootarts);
-		// 	$nla = array( $rootartskeys[0] => ($rootarts + array($nla)));
-		// }
 
 		return $nla;
 
@@ -618,10 +566,6 @@ class GUINavigation {
 
 	private function ulLinks($linkArr, $lno = 1){
 
-		// echo "<pre>";
-		// print_r($linkArr);
-		// echo "</pre>";
-
 		$navStr = $lno > 1 ? "<ul class='lvl$lno'>" : "<ul class='guinav-$this->nana'>";
 
 		foreach($linkArr as $v){
@@ -633,8 +577,10 @@ class GUINavigation {
 			$lk = -1;
 
 			if(count($v) > 1 and is_array($v[$ak[count($ak)-1]])) {
+
 				$nl = array_pop($v);
 				$lk = $ak[count($ak)-2];
+
 			}
 
 			foreach($v as $kk => $vv) {
@@ -654,8 +600,10 @@ class GUINavigation {
 		$navStr .= "</ul>";
 
 		if( $lno === 1) {
+
 			print $navStr;
 			return true;
+
 		} else return $navStr;
 
 	}
@@ -670,21 +618,31 @@ class GUINavigation {
 	private function homeIn($linkArr, $id = false, $pos = false){
 
 		if($id) {
+
 			$iid = $id;
 			$ao = $this->nuc ? rex_category::get($iid, $this->clang_id) : rex_article::get($iid, $this->clang_id);
+
 		} else {
+
 			$iid = $this->ssaid;
 			$ao = rex_article::get($iid, $this->clang_id);
+
 		}
+
 		$pos = $pos ? $pos : $this->home;
 
 		if($id){
+
 			$linkArr =  array( $iid => array( $iid => $this->getLStr($iid, $ao) , $linkArr) );
+
 		} else {
+
 			$lnkhm = array( $iid => array( $iid => $this->getLStr($iid, $ao) ) );
 		
 			if($pos == "end") $linkArr = $linkArr + $lnkhm;
+
 			else $linkArr = $lnkhm + $linkArr;
+
 		}
 
 		return $linkArr;
