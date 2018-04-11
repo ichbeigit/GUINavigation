@@ -2,7 +2,7 @@
 
 echo rex_view::title($this->i18n('guinav_name'));
 
-// was funct?
+// function
 $func = rex_request('func', 'string');
 
 $content = "";
@@ -11,17 +11,16 @@ $title = "";
 
 // welche Seite ist es
 $subpage = rex_be_controller::getCurrentPagePart(2);
-   
-//var_dump($subpage);
 
 // löschen
 if($func == "delete") {
-	// löschen eines Eintags - to do
 
     $del_id = intval(rex_request('id', 'string'));
   
     if (!is_int($del_id) || empty($del_id)) {
+
         echo rex_i18n::msg('guinav_delete_error_invalid');
+
     } else {
     
         $sql = rex_sql::factory();
@@ -30,6 +29,7 @@ if($func == "delete") {
     
         $sql->delete();
         if($sql->getRows() !== 1) echo rex_i18n::msg('guinav_delete_error_query');
+
     }
 
 	$func = "";
@@ -50,12 +50,14 @@ if($func == ""){
     $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '"><i class="rex-icon rex-icon-add"></i></a>';
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
     $list->setColumnParams($thIcon, ['func' => 'edit', 'id' => '###id###']);
+
      // ausgabe festlegen
     $list->removeColumn('id');
     $list->removeColumn('nav_type');
 
     $bc = $subpage == "breadcrumb";
     $ls = $subpage == "langswitch";
+
     if( $subpage == "simple" || $ls || $bc ) {
 
         $list->removeColumn('base_id');
@@ -63,17 +65,25 @@ if($func == ""){
         $list->removeColumn('nav_unit');
 
         if($bc){
+
             $list->removeColumn('simple_link');
-             $list->removeColumn('langswitch_if_necessary');
+            $list->removeColumn('langswitch_if_necessary');
+
         } else if($ls) {
+
             $list->removeColumn('simple_link');
+
         } else {
+
              $list->removeColumn('langswitch_if_necessary');
+
         }
 
     } else {
+
         $list->removeColumn('simple_link');
         $list->removeColumn('langswitch_if_necessary');
+
     }
 
     
@@ -89,6 +99,7 @@ if($func == ""){
         $type = $params['list']->getValue('nav_type');
 
         if($type == "static"){
+
             // wenn homepage, also root, gewählt
             if($start_id === 0) $start_name = "Homepage/Root"; 
             elseif($unit == "cat") $start = rex_category::get($start_id);
@@ -97,6 +108,7 @@ if($func == ""){
             return $start_name . " (id: " . $start_id . ")";
 
         } elseif ($type == "context") {
+
             switch(true){
                 case ($start_id < 0): 
                     return ($start_id * -1) . " " . rex_i18n::msg('guinav_ctxt_field_start_low');
@@ -108,18 +120,21 @@ if($func == ""){
                     return rex_i18n::msg('guinav_ctxt_field_start_current');
                     break;
             }
+
         }
     }
-    //$list->addColumn(rex_i18n::msg('guinav_field_label_base'), nsn('base_id'), 3, ['<th>###VALUE###</th>', '<td>###VALUE###</td>']);
+ 
     $list->setColumnLabel('base_id', rex_i18n::msg('guinav_field_base_label'));
     $list->setColumnFormat('base_id', 'custom', 'nsn');
-
+    
+    // depth
     function ndcb($params){
+
         $d = (int) $params['subject'];
         return $d === -1 ? rex_i18n::msg('guinav_field_depth_all') : $d;
 
     }
-    // depth
+
     $list->setColumnLabel('depth', rex_i18n::msg('guinav_field_depth_label'));
     $list->setColumnFormat('depth', 'custom', 'ndcb');
 
@@ -132,9 +147,10 @@ if($func == ""){
     $list->setColumnLabel('nav_unit', rex_i18n::msg('guinav_field_unit_label'));
     $list->setColumnFormat('nav_unit', 'custom', 'nun');
 
+    // simple
     $list->setColumnLabel('simple_link', rex_i18n::msg('guinav_sp_field_link_label'));
-    //$list->setColumnFormat('simple_link', 'custom', 'nsl');
-
+    
+    // langswitch
     function ls_in($params){
         return $params['subject'] ? rex_i18n::msg('guinav_field_ls_in_yes_label') : rex_i18n::msg('guinav_field_label_ls_in_no');
     }
@@ -142,17 +158,20 @@ if($func == ""){
     $list->setColumnLabel('langswitch_if_necessary', rex_i18n::msg('guinav_ls_field_in_label'));
     $list->setColumnFormat('langswitch_if_necessary', 'custom', 'ls_in');
 
+    // function edit
     $list->addColumn(rex_i18n::msg('guinav_field_functions_label'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('guinav_field_functions_label'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('guinav_field_functions_label'), ['func' => 'edit', 'id' => '###id###']);
     $list->addLinkAttribute(rex_i18n::msg('guinav_field_functions_label'), 'class', 'rex-edit');
 
+    // function delete
     $list->addColumn('delete', '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
     $list->setColumnLayout('delete', ['', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams('delete', ['func' => 'delete', 'id' => '###id###']);
     $list->addLinkAttribute('delete', 'data-confirm', rex_i18n::msg('delete') . ' ?');
     $list->addLinkAttribute('delete', 'class', 'rex-delete');
 
+    // empty
     $list->setNoRowsMessage(rex_i18n::msg('guinav_no_nav_found'));
 
     $content .= $list->get();
@@ -167,74 +186,5 @@ if($func == ""){
 } elseif ($func == 'edit' || $func == 'add') {
 
     rex_be_controller::includeCurrentPageSubPath();
-
-    // $id = rex_request('id', 'int');
-    // $brid = rex_post('base_id_root', 'string');
-    // //var_dump(rex_request('nav_name', 'string')); 
-    // // error_log(var_dump($brid));
-
-    // $form =  rex_form::factory(rex::getTablePrefix() . 'navigation', 'Navigation', "id=" . $id, "post", false);
-
-    // $form->addParam('id', $id);
-
-    // if ($func == 'edit') {
-    //     $form->setEditMode(true);
-    //     $title = rex_i18n::msg('guinav_field_fieldset_edit');
-    //     $dpc = $dhlc = $dd = null;
-    // } else {
-    //     $title = rex_i18n::msg('guinav_field_fieldset_create');
-    //     $dpc = 'current';
-    //     $dhlc = 'active';
-    //     $dd = 1;
-    // }
-
-    // $field = $form->addTextField('nav_name');
-    // $field->setLabel(rex_i18n::msg('guinav_field_label_name'));
-
-    // // $field = $form->addTextField('base_id');
-    // // $field->setAttribute('class', 'form-control nav-d3');
-    // // $field->setLabel(rex_i18n::msg('guinav_field_label_start'));
-
-    // // startpunkt
-    // $field = $form->addSelectField('base_id');
-    // $field->setLabel(rex_i18n::msg('guinav_field_label_start'));
-    // $category_select = new rex_category_select(false, false, true);
-    // $category_select->setSize('1');
-    // $field->setSelect($category_select);
-    // // tiefe
-    // $field = $form->addTextField('depth', $dd);
-    // $field->setAttribute('class', 'form-control nav-d3');
-    // $field->setLabel(rex_i18n::msg('guinav_field_label_depth'));
-
-    // $field = $form->addInputField('checkbox', 'link_on_self', 1);
-    // $field->setLabel(rex_i18n::msg('guinav_field_label_los'));
-
-    // $field = $form->addInputField('checkbox', 'last_level_articles', null);
-    // $field->setLabel(rex_i18n::msg('guinav_field_label_lla'));
-
-    // $field = $form->addInputField('checkbox', 'exclude_start_article', null);
-    // $field->setLabel(rex_i18n::msg('guinav_field_label_esa'));
-
-    // // mark parent
-    // $field = $form->addRawField("<div class='rex-form-group form-group'>" . rex_i18n::msg('guinav_field_text_cc') . "</div>\n");
-    // $field = $form->addTextField('current_class', $dpc);
-    // $field->setLabel(rex_i18n::msg('guinav_field_label_cc'));
-
-    // $field = $form->addTextField('active_link_class', $dhlc);
-    // $field->setLabel(rex_i18n::msg('guinav_field_label_alc'));
-
-    // //$field = $form->addTextField('parent_class', null, array('class' => 'form-control nav-d3'));
-    // //$field->setLabel(rex_i18n::msg('guinav_field_label_mp'));
-
-
-    // $content .= $form->get();
-
-    // $fragment = new rex_fragment();
-    // $fragment->setVar('class', 'edit', false);
-    // $fragment->setVar('title', $title);
-    // $fragment->setVar('body', $content, false);
-    // $content = $fragment->parse('core/page/section.php');
     
 }
-
-// echo $content;

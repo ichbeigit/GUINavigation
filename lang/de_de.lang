@@ -30,15 +30,12 @@ guinav_input_home_end = Am Ende
 guinav_input_los_label = Auf sich selbst verlinken
 guinav_input_cc_text = Eltern Elemente des aktiven Elements mit einer Klasse markieren 
 guinav_input_cc_label = Klasse Eltern
-guinav_input_lla_text = Die Artikel der Kategorien der letzen ausgegebenen Ebene können ausgegeben werden, wenn es mehr als einer ist.
-guinav_input_lla_label = Artikel auf der letzen Ebene ausgeben
-guinav_input_lla_option = (nur wenn Kategorien aufgelistet werden)
-guinav_input_esa_label = Kategorie-Startartikel nicht aufführen
-guinav_input_esa_option = (interessant wenn die Artikel der letzten Ebene gelistet werden sollen)
-guinav_input_lc_label = Klasse für Link
 guinav_input_alc_label = Klasse für aktive Links
+guinav_input_sep_label = Trennzeichen
 guinav_input_exclude_label = Artikel auschließen
 guinav_input_exclude_text = Wird eine Kategorie ausgeschlossen, werden mögliche Unterkategorien ebenfalls nicht angezeigt.
+
+guinav_txt_category_options = Besondere Optionen bei Kategorieauflistung 
 
 
 ## einfach 
@@ -75,7 +72,6 @@ guinav_ctxt_field_start_high = ab Ebene
 guinav_ctxt_text = <b>Eine contextuelle Navigation wird anhand der Position des aktuell angezeigten Artikels im Seitenbaum generiert. Es wird dabei der aktuelle Ast des Baumes ausgegeben. </b>
 guinav_ctxt_input_start_depth_label = Frühesten anzeigen ab Ebene?
 guinav_ctxt_input_start_label = Startebene auswählen
-#guinav_ctxt_input_show_label = Ab welcher Ebene soll die Navigtion angezeigt werden
 guinav_ctxt_input_start_text = Bei der <b>Startebene</B> werden positive Zahlen als fix ab diesem Level interpretiert, negative als vom aktuellen Standpunkt aus nach oben. Die 0 würde als vom der aktuellen Ebenen ausgehend verstanden. <br>Die <B>Tiefe</b> bestimmt wie viele Ebenen von dem ermittelten Startpunkt aus ausgeben werden. "-1" gibt alle Ebenen aus, "0" nichts.
 
 
@@ -92,7 +88,6 @@ guinav_ls_input_los_label = Aktive Sprache verlinken
 guinav_ls_input_alc_label = Klasse für aktive Sprache
 guinav_ls_input_so_label = Offline anzeigen
 guinav_ls_input_so_option = Offline Sprachenversionen des Artikels werden unverlinkt angezeigt
-guinav_ls_input_sep_label = Trennzeichen
 guinav_ls_input_in_label = Nur anzeigen wenn nötig 
 guinav_ls_input_in_option = (mehr als eine Sprachversion des Artikels ist online)
 guinav_ls_input_oc_label= Offline Klasse
@@ -104,16 +99,12 @@ guinav_breadcrumb = Brosamennavigation
 guinav_field_list_caption_breadcrumb = Liste der Brosamennavigationen
 guinav_bc_field_fieldset_edit = Brosamennavigation editieren
 guinav_bc_field_fieldset_create = Neue Brosamen-Navigation anlegen
-#guinav_form_headline_breadcrumb = Brosamennavigation
 
 ## felder bc
 guinav_bc_input_home_label = Website-Startarikel anzeigen
 guinav_bc_input_los_label = angezeigten Artikel verlinken
 guinav_bc_input_alc_label = Klasse für angezeigten Artikel
 guinav_bc_input_exclude_text = Text
-
-#guinav_input_breadcrumb_text = Brosamennavigation
-
 
 
 ## Ausgabe

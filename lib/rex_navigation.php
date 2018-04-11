@@ -127,12 +127,13 @@ class GUINavigation {
 
 			// article am Ende einfügen - für breadcrumb
 			array_push($this->path, $this->cart_id);
-
-		} else {
-
-			$this->last_cat_in_path = true;
-
 		}
+
+		// } else {
+
+		// 	$this->last_cat_in_path = true;
+
+		// }
 
 		$this->workDepth = 1;
 
@@ -157,7 +158,7 @@ class GUINavigation {
                 case ($this->base_id === 0): 
                 	// aktueller standpunkt nach unten
                 	$pc = count($this->path)-1;
-                    $this->ctxtStart = $this->path[($this->last_cat_in_path === true ? $pc : $pc - 1)]; 
+                    $this->ctxtStart = $this->path[($this->last_cat_in_path !== false ? $pc : $pc - 1)]; 	
                     break;
 			}
 		} else if($this->nav_type == "static" and $this->depth === "0") return false; // keine Tiefe, nix ausgeben
@@ -277,7 +278,7 @@ class GUINavigation {
 	private function getCtxt() {
 
 		// ebene checken
-		$curr_depth =  count($this->path) - ($this->last_cat_in_path === true ? 0 : 1);
+		$curr_depth =  count($this->path) - ($this->last_cat_in_path !== false ? 0 : 1);
 		if( $curr_depth <= $this->ctxtStartDepth) return false;
 		// var_dump($this->ctxtStart);
 		// var_dump($this->path);
