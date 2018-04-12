@@ -123,7 +123,7 @@ class GUINavigation {
 
 		$this->workDepth = 1;
 
-		// ctxt
+		// context
 		if($this->nav_type == "context"){
 
 			if($this->depth === 0) return false; // mis config error
@@ -156,6 +156,7 @@ class GUINavigation {
 
 	}	
 
+
 	public static function factory($navName){
 
 		$class = static::getFactoryClass();
@@ -164,11 +165,13 @@ class GUINavigation {
 
 	}
 
+
 	private function notFound(){
 
 		print($this->unknownNameMessage);	
 
 	}
+
 
 	private function get(){
 
@@ -232,14 +235,18 @@ class GUINavigation {
 
 		}
 
+		
+
 		if(!$this->nuc) {
 
 			$linkArr = $this->getArtArr($linkArr);
 
 			if($this->root) {
+
 				$rootarts = $this->getArtLinks();
 				$rootartskeys = array_keys($rootarts);
 				$linkArr = array( $rootartskeys[0] => ($rootarts + array($linkArr)));
+
 			}
 		}
 
@@ -485,7 +492,7 @@ class GUINavigation {
 				
 				if($nxlc){
 
-					$nxlcl = $this->getLinks($nxlc); // recursiv 
+					$nxlcl = $this->getLinks($nxlc);  
 
 					// ohne key wird eine neues array angefügt
 					$ak = array_keys($linkArr);
@@ -511,10 +518,7 @@ class GUINavigation {
 	private function getArtArr($linkArr){
 
 		$nla = array();
-		$addrootarts = false;
-		// echo "<pre>";
-		// print_r($linkArr);
-		// echo "</pre>";
+		// $addrootarts = false;
 		
 		foreach ($linkArr as $k => $v) {
 
@@ -522,16 +526,18 @@ class GUINavigation {
 			
 				continue;
 
-			} else {
+			} 
 
-				$aoc = $v[0];
-				
-			}
+			$galarr = $this->getArtLinks($v[0]);
+			$cv = count($v) > 1;
 
-			$nla[$k] = $this->getArtLinks($aoc);
+			foreach ( $galarr as $ka => $va){
 
-			if(count($v) > 1) $nla[$k][1] = $this->getArtArr($v[1]);
+				$nla[$k][$ka] = $va;
+				if( $cv and $k == $ka) $nla[$k][1] = $this->getArtArr($v[1]);
 
+			} 
+			
 		}
 
 		return $nla;
@@ -546,15 +552,24 @@ class GUINavigation {
 		$ala = array();
 
 		if($cat) {
+
 			$arts = $cat->getArticles(true);
+
 		} else {
+
 			$arts = rex_article::getRootArticles(true);
+
 		}
+
 		foreach($arts as $v) {
+
 			$vid = $v->getId();
+			// site start article skip
 			if($vid == $this->ssaid) continue;
 			$ala[$vid] = $this->getLStr($vid, $v);
+
  		}
+
  		return $ala;
 	}
 
@@ -570,29 +585,23 @@ class GUINavigation {
 
 		foreach($linkArr as $v){
 
-			// Letztes element == array?
-			
 			$ak = array_keys($v);
-			$nl = false;
-			$lk = -1;
-
-			if(count($v) > 1 and is_array($v[$ak[count($ak)-1]])) {
-
-				$nl = array_pop($v);
-				$lk = $ak[count($ak)-2];
-
-			}
+			$ac = 0;
 
 			foreach($v as $kk => $vv) {
 
+				$ac++;
+
+				if(is_array($vv)) continue;
+
 				$navStr .= "<li>" . $vv; 
 			
-				if($nl and $kk == $lk){
+				if( $ac < count($v) and is_array($v[$ak[$ac]]) ){
 					// 
-					$navStr .= $this->ulLinks($nl, ($lno+1) );
+					$navStr .= $this->ulLinks($v[$ak[$ac]], ($lno+1) );
 				}  
 	
-				$navStr .= "</li>";
+				$navStr .= "</li>\n";
 			}
 
 		}
