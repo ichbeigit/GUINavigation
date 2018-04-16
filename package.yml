@@ -1,6 +1,6 @@
 package: guinavigation
 version: '1.0.0 Beta'
-author: 'unknown'
+author: 'Stefan Frank'
 supportpage: www.redaxo.org/de/forum/
 
 
@@ -10,9 +10,9 @@ page:
     pjax: true
     icon: rex-icon fa-link
     subpages:
-        simple: { title: translate:guinav_simple }
         static: { title: translate:guinav_static }
         context: { title: translate:guinav_context }
+        simple: { title: translate:guinav_simple }
         langswitch: { title: translate:guinav_langswitch }
         breadcrumb: { title: translate:guinav_breadcrumb }
         info: { title: translate:guinav_info }
@@ -20,5 +20,5 @@ page:
 requires:
     php: 
         php: '>= 5.5'
-    redaxo: ^5.1.0
+    redaxo: ^5.2.0
 

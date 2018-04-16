@@ -7,7 +7,6 @@ class GUINavigation {
 	// vars
 	private $nana; // navigation name
 	private $sql;
-	private $unknownNameMessage;
 
 	// environment
 	private $clang_id; // current lang id
@@ -57,8 +56,6 @@ class GUINavigation {
 
 		$this->sql->setTable( rex::getTablePrefix(). "guinavigation" )->setWhere( [ 'nav_name' => $this->nana] )->select();
 
-		
-		$this->unknownNameMessage = rex_i18n::msg('guinav_unknown_message') . " - " . $this->nana;
 
 		if($this->sql->getRows()){
 
@@ -172,6 +169,16 @@ class GUINavigation {
 
 	}
 
+	private function error($no){
+		switch ($no){
+			case "unkonw" : print(rex_i18n::msg('guinav_unknown_message') . " - " . $this->nana;);
+			break;
+			case "depth0" : print(rex_i18n::msg('depth0Message'));
+			break;
+			default : print($this->unknownErrorMessage);
+		}
+	}
+
 
 	private function get(){
 
@@ -181,7 +188,9 @@ class GUINavigation {
 			case "simple" : $this->getSimple();
 			break;
 
-			case "static" : $this->getStatic();
+			case "static" : 
+			if ( intval ($this->depth) === 0 ) 
+			$this->getStatic();
 			break;
 
 			case "context": $this->getCtxt();
@@ -235,11 +244,12 @@ class GUINavigation {
 
 		}
 
-		
 
 		if(!$this->nuc) {
 
 			$linkArr = $this->getArtArr($linkArr);
+
+			var_dump($linkArr);
 
 			if($this->root) {
 
@@ -472,7 +482,7 @@ class GUINavigation {
 
 		// ohne objecte
 		// init kind-cats holen
-		if(!$FLObjs) $FLObjs = $this->getChildren();
+		if(!$FLObjs and $this->depth > 0 ) $FLObjs = $this->getChildren();
 
 		$linkArr = array();
 
