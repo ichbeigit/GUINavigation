@@ -39,6 +39,11 @@ $field = $form->addRawField("<div class='rex-form-group form-group'>" . rex_i18n
 $field = $form->addTextField('nav_name');
 $field->setLabel(rex_i18n::msg('guinav_input_name_label'));
 
+// disable
+$field = $form->addCheckboxField('nav_disable');
+$field->setLabel(rex_i18n::msg('guinav_input_disable_label'));
+$field->addOption('', 1);
+
 // unit
 $field = $form->addSelectField('nav_unit');
 $field->setLabel(rex_i18n::msg('guinav_input_unit_label'));
@@ -92,6 +97,12 @@ $field->addOption(rex_i18n::msg('guinav_input_ii_text'), 1);
 // exclude articles
 $field = $form->addLinkListField('exclude');
 $field->setLabel(rex_i18n::msg('guinav_input_exclude_label'));
+
+// link first subcategory
+$field = $form->addLinkListField('link_first');
+$field->setLabel(rex_i18n::msg('guinav_input_lf_label'));
+// erklärung link first 
+$field = $form->addRawField("<div class='rex-form-group form-group'>" . rex_i18n::msg('guinav_input_lf_text') . "</div>\n");
 
 
 $content .= $form->get();

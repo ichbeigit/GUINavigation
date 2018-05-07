@@ -38,8 +38,10 @@ guinav_input_ii_text = individuelle ID für alle Links einfügen id='id-article_
 guinav_input_sep_label = Trennzeichen
 guinav_input_exclude_label = Artikel auschließen
 guinav_input_exclude_text = Wird eine Kategorie ausgeschlossen, werden mögliche Unterkategorien ebenfalls nicht angezeigt.
+guinav_input_lf_label = Auf erste Unterkategorie/artikel verlinken
+guinav_input_lf_text = Die gewählten Kategorien/Artikel sollen auf die erste Unterkategorie bzw. Startartikel der Unterkategorie verlinkt werden. 
 
-guinav_txt_category_options = Besondere Optionen bei Kategorieauflistung 
+#guinav_txt_category_options = Besondere Optionen bei Kategorieauflistung 
 
 
 ## einfach 
@@ -59,8 +61,7 @@ guinav_field_list_caption_static = Liste der statischen Navigationen
 guinav_stat_field_fieldset_create = Neue statische Navigation anlegen
 guinav_stat_form_headline = Statische Navigation
 #felder
-guinav_stat_input_lf_label = Kategorie auf erste Unterkategorie verlinken
-guinav_stat_input_lf_text = Die gewählten Kategorien sollen auf die erste Unterkategorie verlinkt werden. Dies ist sinnvoll, wenn eine Kategorie selbst keinen Inhalt hat.
+
 
 
 ## contextuell

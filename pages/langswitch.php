@@ -37,6 +37,11 @@ $field = $form->addRawField("<div class='rex-form-group form-group'><b>" . rex_i
 $field = $form->addTextField('nav_name');
 $field->setLabel(rex_i18n::msg('guinav_input_name_label'));
 
+// disable
+$field = $form->addCheckboxField('nav_disable');
+$field->setLabel(rex_i18n::msg('guinav_input_disable_label'));
+$field->addOption('', 1);
+
 // show active
 $field = $form->addCheckboxField('langswitch_show_active');
 $field->setLabel(rex_i18n::msg('guinav_ls_input_sa_label'));

@@ -258,7 +258,8 @@ class GUINavigation {
 
 			}
 		} 
-		else if( $this->lsp and $this->home and !$this->root ){ 
+
+		if( $this->lsp  and !$this->root ){ 
 
 			// startpunkt einfügen  list start point
 			$linkArr = $this->homeIn($linkArr, $this->base_id);
@@ -361,7 +362,7 @@ class GUINavigation {
 
 		foreach($this->path as $k => $v){
 			
-			// ausgeschlossene Artikel, oder site start article
+			// ausgeschlossene Artikel oder site start article
 			if( in_array($v, $this->exclude) or intval($v) === 0 or  $v == $this->ssaid ) continue; 
 
 			else {
@@ -436,8 +437,9 @@ class GUINavigation {
 
 	private function getLStr($kid,$vo){
 
-		// eltern objecte markieren
+		// classes array
 		$oacc = false;
+
 		if( $kid == $this->cart_id ) {
 
 				$oacc[] =  $this->alc;
@@ -448,23 +450,25 @@ class GUINavigation {
 
 		}
 
-		//if($this->depth >=  3) 
 		$oacc[] = $kid == $this->ssaid ?  "site-start" : "level-" . $this->workDepth;
 		$iistr = $this->ii ? " id='id-$kid' " : ""; 
 
-		
 		// link first sub categorie
 		if(in_array($kid, $this->linkFirst)) {
+
 			if($sc = $this->getChildren($kid, false)){
+
 				$fsc = array_shift($sc);
 				$kid = $fsc->getId();
+				$oacc[] = "link-first-subcat";
+
 			}
-			$oacc[] = "link-first-subcat"; // link first sub
+			 
 		}
 
 		$lstrc = is_array($oacc) ? " class='" . trim(implode(" ", $oacc)) . "'" : "";
 
-		if(!$this->los and $this->cart_id == $kid){
+		if(!$this->los and $this->cart_id == $kid and !in_array("link-first-subcat", $oacc)){
 
 			// nicht auf sich selbst verlinken
 			$ls = "<span$lstrc$iistr>" . $vo->getName() . "</span>";

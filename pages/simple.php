@@ -35,6 +35,11 @@ $field = $form->addHiddenField('nav_type', 'simple');
 $field = $form->addTextField('nav_name');
 $field->setLabel(rex_i18n::msg('guinav_input_name_label'));
 
+// disable
+$field = $form->addCheckboxField('nav_disable');
+$field->setLabel(rex_i18n::msg('guinav_input_disable_label'));
+$field->addOption('', 1);
+
 $field = $form->addRawField("<div class='rex-form-group form-group'>" . rex_i18n::msg('guinav_sp_input_text') . "</div>\n");
 
 $field = $form->addLinkListField('simple_link');
