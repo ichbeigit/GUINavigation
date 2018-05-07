@@ -38,6 +38,11 @@ $field = $form->addHiddenField('nav_type', 'static');
 $field = $form->addTextField('nav_name');
 $field->setLabel(rex_i18n::msg('guinav_input_name_label'));
 
+// show
+$field = $form->addCheckboxField('nav_disable');
+$field->setLabel(rex_i18n::msg('guinav_input_disable_label'));
+$field->addOption('', 1);
+
 // unit
 $field = $form->addSelectField('nav_unit');
 $field->setLabel(rex_i18n::msg('guinav_input_unit_label'));
@@ -52,11 +57,6 @@ $field->setLabel(rex_i18n::msg('guinav_input_start_label'));
 $category_select = new rex_category_select(false, false, true);
 $category_select->setSize('1');
 $field->setSelect($category_select);
-
-// startpunkt mit anzeigen
-$field = $form->addCheckboxField('list_starting_point');
-$field->setLabel(rex_i18n::msg('guinav_input_lsp_label'));
-$field->addOption(rex_i18n::msg('guinav_input_lsp_text'), 1);
 
 // tiefe
 $field = $form->addTextField('depth', $dd);
@@ -99,6 +99,11 @@ $field->setLabel(rex_i18n::msg('guinav_input_exclude_label'));
 $field = $form->addRawField("<div class='rex-form-group form-group'>" . rex_i18n::msg('guinav_input_exclude_text') . "</div>\n");
 
 $field = $form->addRawField("<div class='rex-form-group form-group' style='border:solid 1px #999; border-left: none; border-right:none; line-height:3rem;'>" . rex_i18n::msg('guinav_txt_category_options') . "</div>\n");
+
+// startpunkt mit anzeigen
+$field = $form->addCheckboxField('list_starting_point');
+$field->setLabel(rex_i18n::msg('guinav_input_lsp_label'));
+$field->addOption(rex_i18n::msg('guinav_input_lsp_text'), 1);
 
 // link first subcategory
 $field = $form->addLinkListField('link_first');

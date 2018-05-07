@@ -51,9 +51,9 @@ $field = $form->addTextField('context_start_depth');
 $field->setLabel(rex_i18n::msg('guinav_ctxt_input_start_depth_label'));
 
 // startpunkt
-$field = $form->addRawField("<div class='rex-form-group form-group'>" . rex_i18n::msg('guinav_ctxt_input_start_text') . "</div>\n");
-$field = $form->addTextField('base_id');
+$field = $form->addTextField('context_start_level');
 $field->setLabel(rex_i18n::msg('guinav_ctxt_input_start_label'));
+$field = $form->addRawField("<div class='rex-form-group form-group'>" . rex_i18n::msg('guinav_ctxt_input_start_text') . "</div>\n");
 
 // tiefe
 $field = $form->addTextField('depth', $dd);

@@ -1,13 +1,8 @@
--- Erstellungszeit: 11. Apr 2018 um 15:32
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
 --
 -- Tabellenstruktur für Tabelle `rex_guinavigation`
 --
 
-CREATE TABLE `rex_guinavigation` (
+CREATE TABLE IF NOT EXISTS `rex_guinavigation` (
   `id` int(11) unsigned NOT NULL,
   `nav_name` varchar(63) DEFAULT NULL,
   `nav_type` varchar(15) DEFAULT NULL,
@@ -28,15 +23,11 @@ CREATE TABLE `rex_guinavigation` (
   `separator_string` varchar(63) DEFAULT NULL,
   `langswitch_show_active` varchar(7) DEFAULT NULL,
   `langswitch_offline_class` varchar(63) DEFAULT NULL,
-  `langswitch_show_offline` varchar(63) DEFAULT NULL
+  `langswitch_show_offline` varchar(63) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nav_name` (`nav_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
---
--- Indizes für die Tabelle `rex_guinavigation`
---
-ALTER TABLE `rex_guinavigation`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `nav_name` (`nav_name`);
 
 --
 -- AUTO_INCREMENT für Tabelle `rex_guinavigation`

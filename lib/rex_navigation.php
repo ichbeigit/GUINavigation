@@ -23,6 +23,7 @@ class GUINavigation {
 	// settings
 	private $nav_type;
 	private $nav_unit;
+	private $disable;
 	private $nuc; // nav unit cat
 	private $base_id;
 	private $lsp; // list starting point
@@ -45,6 +46,7 @@ class GUINavigation {
 	private $workDepth;
 	private $ctxtStart;
 	private $ctxtStartDepth;
+	private $ctxtStartLevel;
 
 
 
@@ -62,6 +64,7 @@ class GUINavigation {
 			// settings
 			$this->nav_type = $this->sql->getValue('nav_type');
 			$this->nav_unit = $this->sql->getValue('nav_unit');
+			$this->disable = $this->sql->getValue('nav_disable') ? true : false;
 			$this->nuc = ( $this->nav_unit == "cat" );
 			$this->base_id = intval($this->sql->getValue('base_id'));
 			$this->lsp = $this->sql->getValue('list_starting_point');
@@ -78,6 +81,7 @@ class GUINavigation {
 			$lfsc = $this->sql->getValue('link_first'); // link first subcat
 			$this->linkFirst = strlen($lfsc) ? explode(",", $lfsc ) : array();
 			$this->ctxtStartDepth = $this->sql->getValue('context_start_depth');
+			$this->ctxtStartLevel = $this->sql->getValue('context_start_level');
 			$ss = $this->sql->getValue('separator_string');
 			$this->separator = strlen($ss) ? $ss : " ";
 
@@ -92,7 +96,7 @@ class GUINavigation {
 
 		} else {
 
-			$this->notFound();
+			$this->msg("unkownNav");
 			return false;
 
 		}
@@ -126,30 +130,33 @@ class GUINavigation {
 			if($this->depth === 0) return false; // mis config error
 
 			$cp = count($this->path)-1;
+			$pthid = false;
 
 			switch(true){
-				case ($this->base_id < 0): 
+				case ($this->ctxtStartLevel < 0): 
 					// von aktuellem standpunkt nach oben
-					//$cp = array_search($this->cart_id, $this->path);
-                    $this->ctxtStart = $this->path[$cp + $this->base_id]; 
-                    // echo $this->path[$cp + $this->depth]; 
-                    // var_dump($this->ctxtStart);
+                    $pthid = $cp + $this->ctxtStartLevel; 
                     break;
-                case ($this->base_id > 0): 
+                case ($this->ctxtStartLevel > 0): 
                 	// ab ebene
-                    $this->ctxtStart = $this->path[$this->base_id];
+                    $pthid = (count($this->path) > $this->ctxtStartLevel ) ? $this->ctxtStartLevel : false;
                     break;
-                case ($this->base_id === 0): 
+                case ($this->ctxtStartLevel === 0): 
                 	// aktueller standpunkt nach unten
-                	$pc = count($this->path)-1;
-                    $this->ctxtStart = $this->path[($this->last_cat_in_path !== false ? $pc : $pc - 1)]; 	
+                    $pthid = ($this->last_cat_in_path !== false ? $cp : $cp - 1); 	
                     break;
 			}
+
+			$this->ctxtStart = $pthid ? $this->path[$pthid] : false;
+
+			// workDepth setzen damit die korrekten Levels bei context kommen
+			$this->workDepth = $pthid;
+			$this->depth += $this->workDepth-1;
 
 		} else if ($this->nav_type == "static" and $this->depth === "0") return false; // keine Tiefe, nix ausgeben
 
 		// navigation holen
-		$this->get();
+		if($this->disable !== true) $this->get();
 
 	}	
 
@@ -163,19 +170,19 @@ class GUINavigation {
 	}
 
 
-	private function notFound(){
+	// private function msg($no){
 
-		print($this->unknownNameMessage);	
+	// 	print($this->unknownNameMessage);	
 
-	}
+	// }
 
-	private function error($no){
+	private function msg($no){
 		switch ($no){
-			case "unkonw" : print(rex_i18n::msg('guinav_unknown_message') . " - " . $this->nana;);
+			case "unkownNav" : print(rex_i18n::msg('guinav_msg_unknown_name') . " - " . $this->nana);
 			break;
-			case "depth0" : print(rex_i18n::msg('depth0Message'));
+			case "depth0" : print(rex_i18n::msg('guinav_msg_depth_0'));
 			break;
-			default : print($this->unknownErrorMessage);
+			default : print(rex_i18n::msg('guinav_msg_unknown_error' . " - $no"));
 		}
 	}
 
@@ -189,11 +196,13 @@ class GUINavigation {
 			break;
 
 			case "static" : 
-			if ( intval ($this->depth) === 0 ) 
-			$this->getStatic();
+			if ( intval ($this->depth) === 0 ) $this->msg("depth0");
+			else $this->getStatic();
 			break;
 
-			case "context": $this->getCtxt();
+			case "context": 
+			if ( intval ($this->depth) === 0 ) $this->msg("depth0");
+			else $this->getCtxt();
 			break;
 
 			case "breadcrumb": $this->getBreadCrumb();
@@ -202,7 +211,7 @@ class GUINavigation {
 			case "langswitch": $this->getLangSwitch();
 			break;
 
-			default: $this->notFound();
+			default: $this->msg();
 
 		}
 
@@ -237,19 +246,9 @@ class GUINavigation {
 
 		if( ! $linkArr = $this->getLinks() ) return false;
 
-		// startpunkt einfügen  list start point
-		if( $this->lsp and !$this->root and !$this->home){
-
-			$linkArr = $this->homeIn($linkArr, $this->base_id);
-
-		}
-
-
 		if(!$this->nuc) {
 
 			$linkArr = $this->getArtArr($linkArr);
-
-			var_dump($linkArr);
 
 			if($this->root) {
 
@@ -258,6 +257,12 @@ class GUINavigation {
 				$linkArr = array( $rootartskeys[0] => ($rootarts + array($linkArr)));
 
 			}
+		} 
+		else if( $this->lsp and $this->home and !$this->root ){ 
+
+			// startpunkt einfügen  list start point
+			$linkArr = $this->homeIn($linkArr, $this->base_id);
+
 		}
 
 		// home
@@ -277,21 +282,19 @@ class GUINavigation {
 	private function getCtxt() {
 
 		// ebene checken
-		$curr_depth =  count($this->path) - ($this->last_cat_in_path !== false ? 0 : 1);
+		$curr_depth =  count($this->path) - ($this->last_cat_in_path === false ? 0 : 1);
 
 		if( $curr_depth <= $this->ctxtStartDepth) return false;
-	
-		$FLObjs = $this->getChildren($this->ctxtStart);
 
-		if(!$FLObjs) return false;
+		$csart = rex_article::get($this->ctxtStart);
+		if( ! $linkArr = $this->getLinks( array( $this->ctxtStart => $csart->getCategory() ) ) ) return false;
 
-		$linkArr = $this->getLinks($FLObjs);
 
-		if(!$this->nuc) $linkArr = $this->getArtArr($linkArr);
+		if(!$this->nuc) {
+			
+			$linkArr = $this->getArtArr($linkArr);
 
-		// startpunkt einfügen bei contextueller nav
-		$ctb = array( array($linkArr) );
-		$linkArr = $this->homeIn($linkArr, $this->ctxtStart);
+		}
 			
 		// home
 		if($this->home) $linkArr = $this->homeIn($linkArr);
@@ -389,14 +392,14 @@ class GUINavigation {
 	}
 
 	/* get children 
-	gibt die  kinder zurück, egal ob cat oder art
+	gibt die  kinder zurück
 	parameter:
 	nxlid - next level id 
 	*/
 
 	private function getChildren($nxlid = false){
 
-		$bid = $nxlid ? $nxlid : $this->base_id;
+		$ccid = $nxlid ? $nxlid : $this->base_id;
 
 		if($this->root and !$nxlid){
 	
@@ -404,7 +407,7 @@ class GUINavigation {
 
 		} else {
 
-			$start_cat = rex_category::get($bid, $this->clang_id);
+			$start_cat = rex_category::get($ccid, $this->clang_id);
 
 			if( ! ($start_cat instanceOf rex_category) ) return false;
 
@@ -445,8 +448,8 @@ class GUINavigation {
 
 		}
 
-		if($this->depth >=  3) $oacc[] = "level-" . $this->workDepth;
-		if($kid == $this->ssaid) $oacc[] = "site-start";
+		//if($this->depth >=  3) 
+		$oacc[] = $kid == $this->ssaid ?  "site-start" : "level-" . $this->workDepth;
 		$iistr = $this->ii ? " id='id-$kid' " : ""; 
 
 		
@@ -479,12 +482,30 @@ class GUINavigation {
 	/* get Kategorie Links */
 
 	private function getLinks($FLObjs = false){
+		
+		$linkArr = array();
 
 		// ohne objecte
 		// init kind-cats holen
-		if(!$FLObjs and $this->depth > 0 ) $FLObjs = $this->getChildren();
+		if($FLObjs === false) {
 
-		$linkArr = array();
+			$FLObjs = $this->getChildren();
+
+			if($FLObjs === false){
+
+				if($this->nuc) {
+
+					$this->msg("no children");
+					return false;
+
+				} else {
+
+					$base_art = rex_article::get($this->base_id, $this->clang_id);
+					$FLObjs[$base_art->getId()] = $base_art->getCategory();
+
+				}
+			}
+		}
 
 		foreach($FLObjs as $kid => $vo){
 
@@ -493,9 +514,9 @@ class GUINavigation {
 			// link_first
 
 			$linkArr[$kid] = $this->nuc ? array( $this->getLStr($kid, $vo) ) : array($vo);
-
+			
 			// weitere ebenen 
-			if($this->workDepth < $this->depth or $this->depth == (int) -1 ){
+			if($this->workDepth < $this->depth or $this->depth ==  -1 ){
 
 				$this->workDepth++;
 				$nxlc = $this->getChildren($kid);
@@ -504,7 +525,7 @@ class GUINavigation {
 
 					$nxlcl = $this->getLinks($nxlc);  
 
-					// ohne key wird eine neues array angefügt
+					// ohne key wird ein neues array angefügt
 					$ak = array_keys($linkArr);
 					$linkArr[ array_pop($ak) ][] = $nxlcl;
 
@@ -515,8 +536,9 @@ class GUINavigation {
 			} 
 			
 		}
-		
-		return $linkArr;
+
+		// fehler keine links gefunden count array = 0
+		return count($linkArr) ? $linkArr : false;
 
 	}
 
@@ -528,8 +550,7 @@ class GUINavigation {
 	private function getArtArr($linkArr){
 
 		$nla = array();
-		// $addrootarts = false;
-		
+
 		foreach ($linkArr as $k => $v) {
 
 			if($k === 0) {
@@ -541,20 +562,26 @@ class GUINavigation {
 			$galarr = $this->getArtLinks($v[0]);
 			$cv = count($v) > 1;
 
+			$this->workDepth++;
+
 			foreach ( $galarr as $ka => $va){
 
 				$nla[$k][$ka] = $va;
 				if( $cv and $k == $ka) $nla[$k][1] = $this->getArtArr($v[1]);
 
 			} 
-			
+
+			$this->workDepth--;
 		}
 
 		return $nla;
 
 	}
 
-
+	/*
+	gibt die artikel links für eine Kategorie zurück
+	[cat (rex_category)]
+	*/
 
 
 	private function getArtLinks($cat = false){
@@ -611,7 +638,7 @@ class GUINavigation {
 					$navStr .= $this->ulLinks($v[$ak[$ac]], ($lno+1) );
 				}  
 	
-				$navStr .= "</li>\n";
+				$navStr .= "</li>";
 			}
 
 		}

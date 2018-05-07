@@ -1,12 +1,12 @@
 package: guinavigation
-version: '1.0.0 Beta'
+version: '1.0.0 Beta 1'
 author: 'Stefan Frank'
 supportpage: www.redaxo.org/de/forum/
 
 
 page:
     title: translate:guinav_name
-    perm: admin[]
+    perm: guinavigation[]
     pjax: true
     icon: rex-icon fa-link
     subpages:
@@ -21,4 +21,6 @@ requires:
     php: 
         php: '>= 5.5'
     redaxo: ^5.2.0
+    packages: 
+        yform:'^2.1'
 

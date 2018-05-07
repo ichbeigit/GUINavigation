@@ -18,9 +18,10 @@ guinav_field_depth_label = Ebenen
 guinav_field_depth_all = Alle
 guinav_field_unit_label = Auflisten
 guinav_input_name_label = Name
+guinav_input_disable_label = Deaktivieren
 guinav_input_start_label = Startpunkt auswählen
 guinav_input_lsp_label = Startpunkt mit ausgeben
-guinav_input_lsp_text = Bei der Auflistung von 'Artikel' wird die Startebene immer mit ausgegeben. Wenn ab der ersten Ebene 'Homepage' ausgeben wird, macht diese Option das gleiche wie 'Website-Startartikel einbinden'. 
+guinav_input_lsp_text = Beim Startpunkt 'Homepage' bestimmt 'Website-Startartikel einbinden' ob und wo ausgegeben wird. 
 guinav_input_unit_label = Kategorien oder Artikel auslisten?
 guinav_input_depth_label = Tiefe
 guinav_input_depth_text = Wie viele Ebenen sollen ausgegeben werden? -1 gibt alle Ebenen aus.
@@ -74,8 +75,8 @@ guinav_ctxt_field_start_high = ab Ebene
 # felder
 guinav_ctxt_text = <b>Eine contextuelle Navigation wird anhand der Position des aktuell angezeigten Artikels im Seitenbaum generiert. Es wird dabei der aktuelle Ast des Baumes ausgegeben. </b>
 guinav_ctxt_input_start_depth_label = Frühesten anzeigen ab Ebene?
-guinav_ctxt_input_start_label = Startebene auswählen
-guinav_ctxt_input_start_text = Bei der <b>Startebene</B> werden positive Zahlen als fix ab diesem Level interpretiert, negative als vom aktuellen Standpunkt aus nach oben. Die 0 würde als vom der aktuellen Ebenen ausgehend verstanden. <br>Die <B>Tiefe</b> bestimmt wie viele Ebenen von dem ermittelten Startpunkt aus ausgeben werden. "-1" gibt alle Ebenen aus, "0" nichts.
+guinav_ctxt_input_start_label = Startebene für anzeigte Navigation
+guinav_ctxt_input_start_text = Bei <b>'Startebene für anzeigte Navigation'</B> werden positive Zahlen als fix ab dem Level, negative als vom aktuellen Standpunkt aus nach oben und 0 als von der aktuellen Standpunkt ausgehend verstanden. <br>Die <B>Tiefe</b> bestimmt wie viele Ebenen von dem ermittelten Startpunkt aus ausgeben werden. "-1" gibt alle Ebenen aus, "0" nichts.
 
 
 ### langswitch
@@ -111,5 +112,6 @@ guinav_bc_input_exclude_text = Text
 
 
 ## Ausgabe
-guinav_unknown_message = Keine Navigation mit diesem Namen gefunden
-guinav_config_error = Es ist ein Fehler aufgetreten! Bitte überprüfe die Konfiguration.
+guinav_msg_unknown_name = Keine Navigation mit diesem Namen gefunden
+guinav_msg_unkown_error = Es ist ein Fehler aufgetreten! Bitte überprüfe die Konfiguration.
+guinav_msg_depth_0 = Es ist Tiefe = 0 eingstellt.

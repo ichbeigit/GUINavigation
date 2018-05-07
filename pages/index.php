@@ -1,6 +1,7 @@
 <?php
 
 echo rex_view::title($this->i18n('guinav_name'));
+rex_view::addJsFile( $this->getAssetsUrl('js/guinav.js') );
 
 // function
 $func = rex_request('func', 'string');
