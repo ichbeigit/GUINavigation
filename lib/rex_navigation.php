@@ -81,7 +81,7 @@ class GUINavigation {
 			$lfsc = $this->sql->getValue('link_first'); // link first subcat
 			$this->linkFirst = strlen($lfsc) ? explode(",", $lfsc ) : array();
 			$this->ctxtStartDepth = $this->sql->getValue('context_start_depth');
-			$this->ctxtStartLevel = $this->sql->getValue('context_start_level');
+			$this->ctxtStartLevel = intval($this->sql->getValue('context_start_level'));
 			$ss = $this->sql->getValue('separator_string');
 			$this->separator = strlen($ss) ? $ss : " ";
 
@@ -127,12 +127,18 @@ class GUINavigation {
 		// context
 		if($this->nav_type == "context"){
 
-			if($this->depth === 0) return false; // mis config error
+			if($this->depth === 0) {
+
+				$this->msg("no depth");
+				return false;
+
+			} 
 
 			$cp = count($this->path)-1;
 			$pthid = false;
 
 			switch(true){
+
 				case ($this->ctxtStartLevel < 0): 
 					// von aktuellem standpunkt nach oben
                     $pthid = $cp + $this->ctxtStartLevel; 
@@ -143,8 +149,9 @@ class GUINavigation {
                     break;
                 case ($this->ctxtStartLevel === 0): 
                 	// aktueller standpunkt nach unten
-                    $pthid = ($this->last_cat_in_path !== false ? $cp : $cp - 1); 	
+                    $pthid = ($this->last_cat_in_path === false ? $cp : $cp - 1);	
                     break;
+
 			}
 
 			$this->ctxtStart = $pthid ? $this->path[$pthid] : false;
@@ -153,7 +160,12 @@ class GUINavigation {
 			$this->workDepth = $pthid;
 			$this->depth += $this->workDepth-1;
 
-		} else if ($this->nav_type == "static" and $this->depth === "0") return false; // keine Tiefe, nix ausgeben
+		} else if ($this->nav_type == "static" and $this->depth === "0") {
+
+			$this->msg("no depth");
+			return false; // keine Tiefe, nix ausgeben
+
+		}
 
 		// navigation holen
 		if($this->disable !== true) $this->get();
@@ -177,12 +189,17 @@ class GUINavigation {
 	// }
 
 	private function msg($no){
+
+		if($this->disable) return;
+
 		switch ($no){
+
 			case "unkownNav" : print(rex_i18n::msg('guinav_msg_unknown_name') . " - " . $this->nana);
 			break;
 			case "depth0" : print(rex_i18n::msg('guinav_msg_depth_0'));
 			break;
-			default : print(rex_i18n::msg('guinav_msg_unknown_error' . " - $no"));
+			default : print(rex_i18n::msg('guinav_msg_unknown_error') . " - $no");
+
 		}
 	}
 
@@ -252,9 +269,20 @@ class GUINavigation {
 
 			if($this->root) {
 
+				$this->workDepth = 0;
 				$rootarts = $this->getArtLinks();
-				$rootartskeys = array_keys($rootarts);
-				$linkArr = array( $rootartskeys[0] => ($rootarts + array($linkArr)));
+
+				foreach($rootarts as $k => $v){
+					
+					if(in_array($k, $this->exclude)) continue;
+					// der Artikelbaum wir beim SiteStartartikel eingehängt
+					$raarr[$k] = $k == 0 ? array($v , $linkArr) : array($v);
+
+				}
+				
+				$linkArr = $raarr;
+				// home schon verarbeitet
+				$this->home = false;
 
 			}
 		} 
@@ -327,13 +355,16 @@ class GUINavigation {
 			$art = rex_article::get($this->cart_id, $laid);
 
 			// show offline
-			if( !$art->isOnline() and ( $this->ls_show_offline or ($alang and $this->ls_show_active) ) ){
+			if( !$art->isOnline() ){
 
-				$ca[] = $this->ls_offline_class;
-				$lssoff = true;
+				if( $this->ls_show_offline or ($alang and $this->ls_show_active) ) {
 
-			} elseif (!$art->isOnline()) continue;
+					$ca[] = $this->ls_offline_class;
+					$lssoff = true;
 
+				} else continue;
+
+			}
 
 			$url = rex_getUrl($this->cart_id, $laid);
 			$nm = $la->getName();
@@ -342,7 +373,7 @@ class GUINavigation {
 
 			$alang_class = count($ca) ? " class='" . implode(" ", $ca) . "'" : "";
 
-			$linkArr[] =  (($alang and $this->los) or (!$alang and !$lssoff)) ? "<a href='$url'$alang_class>$nm</a>" : "<span$alang_class>$nm</span>";
+			$linkArr[] =  ( ($alang and $this->los and $art->isOnline()) or (!$alang and !$lssoff) ) ? "<a href='$url'$alang_class>$nm</a>" : "<span$alang_class>$nm</span>";
 
 		}
 
@@ -393,8 +424,6 @@ class GUINavigation {
 	}
 
 	/* get children 
-	gibt die  kinder zurück
-	parameter:
 	nxlid - next level id 
 	*/
 
@@ -418,15 +447,15 @@ class GUINavigation {
 
 		if(count($nos) < 1) return false;
 
-		$FLObjs = false;
+		$obj_arr = false;
 
 		foreach($nos as $v) {
 			
-			$FLObjs[$v->getId()] = $v;
+			$obj_arr[$v->getId()] = $v;
 
 		}
 
-      	return $FLObjs;
+      	return $obj_arr;
 	}
 
 	/* 
@@ -485,33 +514,35 @@ class GUINavigation {
 
 	/* get Kategorie Links */
 
-	private function getLinks($FLObjs = false){
+	private function getLinks($obj_arr = -1){
 		
 		$linkArr = array();
 
 		// ohne objecte
 		// init kind-cats holen
-		if($FLObjs === false) {
+		if($obj_arr === -1) {
 
-			$FLObjs = $this->getChildren();
+			$obj_arr = $this->getChildren();
+			
+		} 
 
-			if($FLObjs === false){
+		if($obj_arr === false){
 
-				if($this->nuc) {
+			//if($this->nuc) {
 
-					$this->msg("no children");
-					return false;
+				$this->msg("no children");
+				return false;
 
-				} else {
+			// } else {
 
-					$base_art = rex_article::get($this->base_id, $this->clang_id);
-					$FLObjs[$base_art->getId()] = $base_art->getCategory();
+			// 	$base_art = rex_article::get($this->base_id, $this->clang_id);
+			// 	var_dump($base_art);
+			// 	$obj_arr[$base_art->getId()] = $base_art->getCategory();
 
-				}
-			}
+			// }
 		}
 
-		foreach($FLObjs as $kid => $vo){
+		foreach($obj_arr as $kid => $vo){
 
 			if( in_array($kid, $this->exclude) ) continue; // ausgeschlossene Artikel
 
@@ -600,15 +631,33 @@ class GUINavigation {
 
 			$arts = rex_article::getRootArticles(true);
 
+
+
 		}
 
 		foreach($arts as $v) {
 
 			$vid = $v->getId();
-			// site start article skip
+			// skip site start article
 			if($vid == $this->ssaid) continue;
 			$ala[$vid] = $this->getLStr($vid, $v);
 
+ 		}
+
+ 		if(!$cat) {
+
+ 			if($this->home !== false){
+ 		
+				$ssl = $this->getLStr($this->ssaid, rex_article::getSiteStartArticle());
+				
+			} else {
+	
+				$ssl = "";
+	
+			}
+	
+			$ala = $this->home == "start" ? array(0 => $ssl) + $ala : $ala + array(0 => $ssl);
+ 			
  		}
 
  		return $ala;
@@ -635,12 +684,14 @@ class GUINavigation {
 
 				if(is_array($vv)) continue;
 
-				$navStr .= "<li>" . $vv; 
+				$navStr .= "<li>"; 
 			
 				if( $ac < count($v) and is_array($v[$ak[$ac]]) ){
-					// 
+
+					$navStr .= str_replace("class='", "class='has-children ", $vv);
 					$navStr .= $this->ulLinks($v[$ak[$ac]], ($lno+1) );
-				}  
+
+				}  else $navStr .= $vv;
 	
 				$navStr .= "</li>";
 			}

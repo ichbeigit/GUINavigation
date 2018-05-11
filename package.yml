@@ -13,7 +13,7 @@ page:
         static: { title: translate:guinav_static }
         context: { title: translate:guinav_context }
         simple: { title: translate:guinav_simple }
-        langswitch: { title: translate:guinav_langswitch }
+        lang: { title: translate:guinav_lang }
         breadcrumb: { title: translate:guinav_breadcrumb }
         info: { title: translate:guinav_info }
 

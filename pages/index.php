@@ -57,7 +57,7 @@ if($func == "" and $subpage != "info"){
     $list->removeColumn('nav_type');
 
     $bc = $subpage == "breadcrumb";
-    $ls = $subpage == "langswitch";
+    $ls = $subpage == "lang";
 
     if( $subpage == "simple" || $ls || $bc ) {
 

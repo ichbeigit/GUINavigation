@@ -9,20 +9,20 @@ $content = "";
 $id = rex_request('id', 'int');
 $brid = rex_post('base_id_root', 'string');
 
-$form =  rex_form::factory(rex::getTablePrefix() . 'guinavigation', rex_i18n::msg('guinav_langswitch'), "id=" . $id, "post", false);
+$form =  rex_form::factory(rex::getTablePrefix() . 'guinavigation', rex_i18n::msg('guinav_lang_hl'), "id=" . $id, "post", false);
 
 $form->addParam('id', $id);
 
 if ($func == 'edit') {
 
     $form->setEditMode(true);
-    $title = rex_i18n::msg('guinav_ls_field_fieldset_edit');
+    $title = rex_i18n::msg('guinav_lang_field_fieldset_edit');
     $dpc = $dhlc = $dd = null;
     $add = false;
 
 } else {
 
-    $title = rex_i18n::msg('guinav_ls_field_fieldset_create');
+    $title = rex_i18n::msg('guinav_lang_field_fieldset_create');
     $dpc = 'current';
     $dhlc = 'active';
     $dd = 1;
@@ -32,7 +32,7 @@ if ($func == 'edit') {
 
 $field = $form->addHiddenField('nav_type', 'langswitch');
 
-$field = $form->addRawField("<div class='rex-form-group form-group'><b>" . rex_i18n::msg('guinav_ls_input_text') . "</B></div>\n");
+$field = $form->addRawField("<div class='rex-form-group form-group'><b>" . rex_i18n::msg('guinav_lang_input_text') . "</B></div>\n");
 
 $field = $form->addTextField('nav_name');
 $field->setLabel(rex_i18n::msg('guinav_input_name_label'));
@@ -44,19 +44,19 @@ $field->addOption('', 1);
 
 // show active
 $field = $form->addCheckboxField('langswitch_show_active');
-$field->setLabel(rex_i18n::msg('guinav_ls_input_sa_label'));
+$field->setLabel(rex_i18n::msg('guinav_lang_input_sa_label'));
 $field->addOption('', 1);
 if($add) $field->setAttribute($c, $c);
 
 // link on self
 $field = $form->addCheckboxField('link_on_self');
-$field->setLabel(rex_i18n::msg('guinav_ls_input_los_label'));
+$field->setLabel(rex_i18n::msg('guinav_lang_input_los_label'));
 $field->addOption('', 1);
 if($add) $field->setAttribute($c, $c);
 
 // active link class
 $field = $form->addTextField('active_link_class', $dhlc);
-$field->setLabel(rex_i18n::msg('guinav_ls_input_alc_label'));
+$field->setLabel(rex_i18n::msg('guinav_lang_input_alc_label'));
 $field->setAttribute("maxlength", "63");
 
 // individual id
@@ -71,17 +71,17 @@ $field->setAttribute("maxlength", "63");
 
 // show offline
 $field = $form->addCheckboxField('langswitch_show_offline');
-$field->setLabel(rex_i18n::msg('guinav_ls_input_so_label'));
-$field->addOption(rex_i18n::msg('guinav_ls_input_so_option'), 1);
+$field->setLabel(rex_i18n::msg('guinav_lang_input_so_label'));
+$field->addOption(rex_i18n::msg('guinav_lang_input_so_option'), 1);
 
 // offline class
 $field = $form->addTextField('langswitch_offline_class', ($add ? "offline" : null));
-$field->setLabel(rex_i18n::msg('guinav_ls_input_oc_label'));
+$field->setLabel(rex_i18n::msg('guinav_lang_input_oc_label'));
 $field->setAttribute("maxlength", "63");
 
 // exclude articles
 $field = $form->addLinkListField('exclude');
-$field->setLabel(rex_i18n::msg('guinav_ls_input_exclude_label'));
+$field->setLabel(rex_i18n::msg('guinav_lang_input_exclude_label'));
 
 
 $content .= $form->get();
