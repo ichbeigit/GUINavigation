@@ -188,7 +188,7 @@ class GUINavigation {
 
 	// }
 
-	private function msg($no){
+	private function msg($no = false){
 
 		if($this->disable) return;
 
@@ -228,7 +228,7 @@ class GUINavigation {
 			case "langswitch": $this->getLangSwitch();
 			break;
 
-			default: $this->msg();
+			default: $this->msg('unknown type');
 
 		}
 
@@ -377,7 +377,7 @@ class GUINavigation {
 
 		}
 
-		if( count($linkArr) > 0  and !in_array($this->cart_id, $this->exclude)) echo "<div class='guinav-$this->nana'>" . implode($this->separator, $linkArr) . "</div>";
+		if( count($linkArr) > 0  and !in_array($this->cart_id, $this->exclude)) echo "<div class='guinav-$this->nana'>" . implode("<span>" . $this->separator . "</span>", $linkArr) . "</div>";
 		
 	}
 
@@ -419,7 +419,7 @@ class GUINavigation {
 			array_unshift($bcl_arr, $this->getLStr($this->ssaid, rex_article::get($this->ssaid))); 
 		}
 	
-		echo "<div class='guinav-$this->nana'>" . implode($this->separator, $bcl_arr) . "</div>";
+		echo "<div class='guinav-$this->nana'>" . implode("<span>" . $this->separator . "</span>", $bcl_arr) . "</div>";
 
 	}
 
