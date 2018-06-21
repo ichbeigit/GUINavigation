@@ -30,7 +30,7 @@ if ($func == 'edit') {
    
 }
 
-$field = $form->addHiddenField('nav_type', 'langswitch');
+$field = $form->addHiddenField('nav_type', 'lang');
 
 $field = $form->addRawField("<div class='rex-form-group form-group'><b>" . rex_i18n::msg('guinav_lang_input_text') . "</B></div>\n");
 
