@@ -5,7 +5,7 @@ version history
 
 1.0.0  
 Erste stabile Version  
-Wenn eine frühere Version benutzt wird, bitte neu installieren.
+Wenn eine frühere Version benutzt wird, bitte alte Version deinstallieren und neue Version installieren.
 
 
 1.0.0 Beta  
