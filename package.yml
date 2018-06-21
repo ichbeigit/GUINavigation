@@ -1,7 +1,7 @@
 package: guinavigation
-version: '1.0.0 Beta 1'
+version: '1.0.0'
 author: 'Stefan Frank'
-supportpage: www.redaxo.org/de/forum/
+supportpage: https://github.com/ichbeigit/GUINavigation
 
 
 page:
@@ -16,6 +16,7 @@ page:
         lang: { title: translate:guinav_lang }
         breadcrumb: { title: translate:guinav_breadcrumb }
         info: { title: translate:guinav_info }
+        code: { title: translate:guinav_code }
 
 requires:
     php: 

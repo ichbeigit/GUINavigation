@@ -3,7 +3,7 @@
 --
 
 CREATE TABLE IF NOT EXISTS `rex_guinavigation` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL,
   `nav_name` varchar(63) DEFAULT NULL,
   `nav_type` varchar(15) DEFAULT NULL,
   `nav_unit` varchar(15) DEFAULT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `rex_guinavigation` (
   `link_on_self` varchar(7) DEFAULT NULL,
   `current_class` varchar(63) DEFAULT NULL,
   `active_link_class` varchar(63) DEFAULT NULL,
-  `individual_id` varchar(7) DEFAULT NULL,
+  `individual_class` varchar(7) DEFAULT NULL,
   `link_first` text,
   `exclude` text,
   `ctxt_show` int(11) DEFAULT NULL,
@@ -25,12 +25,8 @@ CREATE TABLE IF NOT EXISTS `rex_guinavigation` (
   `separator_string` varchar(63) DEFAULT NULL,
   `langswitch_show_active` varchar(7) DEFAULT NULL,
   `langswitch_offline_class` varchar(63) DEFAULT NULL,
-  `langswitch_show_offline` varchar(63) DEFAULT NULL,
+  `langswitch_show_offline` varchar(63) DEFAULT NULL
   PRIMARY KEY (`id`),
   UNIQUE KEY `nav_name` (`nav_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-
---
--- AUTO_INCREMENT für Tabelle `rex_guinavigation`
---
