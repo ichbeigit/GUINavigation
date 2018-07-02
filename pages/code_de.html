@@ -1,0 +1,56 @@
+
+
+<P><h3>Sprachmenü</h3>
+<pre>
+&lt;div class='<i>guinav-mein-sprachmenue</i>'&gt;
+	&lt;a href='./index.php?article_id=1&amp;clang=1' class='<i>active</i>'&gt;Sprache 1&lt;/a&gt;&lt;span&gt; | &lt;/span&gt;
+	&lt;a href='./index.php?article_id=1&amp;clang=2'&gt;Sprache 2&lt;/a&gt;&lt;span&gt; | &lt;/span&gt;
+	&lt;span class='<i>offline</i>'&gt;Sprache 3&lt;/span&gt;
+&lt;/div&gt;
+</pre></P>
+
+<P><h3>Statische/Contextuelle Navigation</h3>
+<pre>
+&lt;ul class='<i>guinav-meine-statische-navigation</i>'&gt;
+	&lt;li&gt;&lt;a href="./index.php?article_id=30&amp;clang=1" class='<i>site-start id-30</i>'&gt;Startseite&lt;/a&gt;&lt;/li&gt;
+	&lt;li&gt;&lt;a href="./index.php?article_id=2&amp;clang=1" class='<i>level-1 id-2</i>'&gt;Seite 1&lt;/a&gt;&lt;/li&gt;
+	&lt;li&gt;&lt;a href="./index.php?article_id=3&amp;clang=1" class='<i>has-children current level-1 id-3</i>'&gt;Seite 2&lt;/a&gt;
+		&lt;ul class='<i>lvl2</i>'&gt;
+			&lt;li&gt;&lt;a href="./index.php?<em>article_id=14</em>&amp;clang=1" class='<i>has-children current level-2 id-4 <em>link-first-subcat</em></i>'&gt;Seite 2.1&lt;/a&gt;
+				&lt;ul class='<i>lvl3</i>'&gt;
+					&lt;li&gt;&lt;a href="./index.php?article_id=14&amp;clang=1" class='<i>acitve level-3 id-14</i>'&gt;Seite 2.1.1&lt;/a&gt;&lt;/li&gt;
+				&lt;/ul&gt;
+			&lt;/li&gt;
+		&lt;/ul&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+Bei einer contextuellen Navigation werden die tatsächlichen Level ausgegeben und nicht mit "level-1" begonnen.</P>
+
+<P><h3>Einfache Navigation</h3>
+	<pre>
+&lt;ul class='<i>guinav-meine-einfache-navigation</i>'&gt;
+	&lt;li&gt;&lt;a href="./index.php?article_id=7&amp;clang=1" class='<i>active</i>'&gt;Seite 1&lt;/a&gt;&lt;/li&gt;
+	&lt;li&gt;&lt;a href="./index.php?article_id=5&amp;clang=1"&gt;Seite 4.2&lt;/a&gt;&lt;/li&gt;
+	&lt;li&gt;&lt;a href="./index.php?article_id=13&amp;clang=1"&gt;Seite 3.1&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</pre></P>
+
+<P><h3>Brosamen Navigation</h3>
+	<pre>
+&lt;div class='<i>guinav-meine-brosamen-navigation</i>'&gt;
+	&lt;a href="./index.php?article_id=30&amp;clang=1" class='<i>site-start</i>'&gt;Startseite&lt;/a&gt;
+	&lt;span&gt; &gt;&gt; &lt;/span&gt;
+	&lt;a href="./index.php?article_id=3&amp;clang=1" class='<i>level-1</i>'&gt;Seite 1&lt;/a&gt;
+	&lt;span&gt; &gt;&gt; &lt;/span&gt;
+	&lt;a href="./index.php?article_id=14&amp;clang=1" class='<i>level-2</i>'&gt;Seite 1.1&lt;/a&gt;
+	&lt;span&gt; &gt;&gt; &lt;/span&gt;
+	&lt;a href="./index.php?article_id=14&amp;clang=1" class='<i>active level-3</i>'&gt;Seite 1.1.1&lt;/a&gt;
+&lt;/div&gt;
+</pre>
+
+Soll der aktuelle Artikel unverlinkt ausgegeben werden, so geschieht das als "span":<br><br>
+<pre>&lt;span class='<i>active level-5</i>'&gt;Seite 1.1.1.2&lt;/span&gt;</pre>
+</P>
+
+<P><h3></h3></P>

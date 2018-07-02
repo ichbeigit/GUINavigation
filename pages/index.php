@@ -37,7 +37,7 @@ if($func == "delete") {
 }
 
 
-if($func == "" and $subpage != "info"){
+if($func == "" and $subpage != "info" and $subpage != "code"){
 	// liste anzeigen
 
 	echo rex_api_function::getMessage();
@@ -184,7 +184,7 @@ if($func == "" and $subpage != "info"){
 
     echo $content;
 
-} elseif ($func == 'edit' or $func == 'add' or $subpage == "info") {
+} elseif ($func == 'edit' or $func == 'add' or $subpage == "info" or $subpage == "code") {
 
     rex_be_controller::includeCurrentPageSubPath();
     

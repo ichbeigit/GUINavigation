@@ -1,5 +1,7 @@
 <?php
 
+
+
 class GUINavigation {
 
 	use rex_factory_trait;
@@ -31,7 +33,7 @@ class GUINavigation {
 	private $los; // link on self
 	private $cc; // current class
 	private $alc; // active link class
-	private $ii; // indivdual id
+	private $ic; // indivdual id
 	private $home;
 	private $exclude;
 	private $separator; 
@@ -73,7 +75,7 @@ class GUINavigation {
 			$cc = $this->sql->getValue('current_class');
 			$this->cc = $cc === NULL ? false : $cc;
 			$this->alc = $this->sql->getValue('active_link_class');
-			$this->ii = $this->sql->getValue('individual_id');
+			$this->ic = $this->sql->getValue('individual_class');
 			$h = $this->sql->getValue('home');
 			$this->home = strlen($h) ?  $h : false; 
 			$ex = $this->sql->getValue('exclude');
@@ -245,6 +247,7 @@ class GUINavigation {
 		foreach($this->sl as $v){
 
 			$art = rex_article::get($v);
+			$this->workDepth = false;
 			$linkArr[] = array( $this->getLStr($v,$art) );
 
 		}
@@ -410,6 +413,7 @@ class GUINavigation {
 				}
 
 				$bcl_arr[] = $this->getLStr($v, $bco);
+				$this->workDepth++;
 			}
 			
 		}
@@ -479,8 +483,18 @@ class GUINavigation {
 
 		}
 
-		$oacc[] = $kid == $this->ssaid ?  "site-start" : "level-" . $this->workDepth;
-		$iistr = $this->ii ? " id='id-$kid' " : ""; 
+		if($kid == $this->ssaid){
+
+			$oacc[] =  "site-start";
+
+		} else if($this->workDepth) {
+
+			$oacc[] = "level-" . $this->workDepth;
+
+		}
+		// $oacc[] = $kid == $this->ssaid ?  "site-start" : "level-" . $this->workDepth;
+		//$iistr = $this->ii ? " id='id-$kid' " : ""; 
+		if($this->ic) $oacc[] = "id-$kid";
 
 		// link first sub categorie
 		if(in_array($kid, $this->linkFirst)) {
@@ -500,11 +514,11 @@ class GUINavigation {
 		if(!$this->los and $this->cart_id == $kid and !in_array("link-first-subcat", $oacc)){
 
 			// nicht auf sich selbst verlinken
-			$ls = "<span$lstrc$iistr>" . $vo->getName() . "</span>";
+			$ls = "<span" . $lstrc . ">" . $vo->getName() . "</span>";
 
 		} else {
 
-			$ls =  '<a href="' . rex_getUrl($kid,$this->clang_id) . '"' . $lstrc . $iistr . '>' . $vo->getName() . "</a>";
+			$ls =  '<a href="' . rex_getUrl($kid,$this->clang_id) . '"' . $lstrc . '>' . $vo->getName() . "</a>";
 			
 		}
 
