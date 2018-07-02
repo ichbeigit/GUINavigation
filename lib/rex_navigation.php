@@ -227,7 +227,7 @@ class GUINavigation {
 			case "breadcrumb": $this->getBreadCrumb();
 			break;
 
-			case "langswitch": $this->getLangSwitch();
+			case "lang": $this->getLangSwitch();
 			break;
 
 			default: $this->msg('unknown type');
