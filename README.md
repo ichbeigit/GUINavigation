@@ -4,7 +4,7 @@ AddOn für Redaxo Verion 1.0.1
 
 version history
 
-1.0.1 
+1.0.1  
 Bugfix  
 - Fehler bei navtype für Sprachnavigation beseitigt
 
