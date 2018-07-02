@@ -15,3 +15,5 @@
 	<li>Brosamennavigation<br>
 	</li>
 </ul>
+
+<p>Falls eine Version von 1.0.0 verwendet wird, diese zuerst deinstallieren und dann die neue Version installieren.</p>
