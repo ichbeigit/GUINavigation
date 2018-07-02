@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `rex_guinavigation` (
   `separator_string` varchar(63) DEFAULT NULL,
   `langswitch_show_active` varchar(7) DEFAULT NULL,
   `langswitch_offline_class` varchar(63) DEFAULT NULL,
-  `langswitch_show_offline` varchar(63) DEFAULT NULL
+  `langswitch_show_offline` varchar(63) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nav_name` (`nav_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
